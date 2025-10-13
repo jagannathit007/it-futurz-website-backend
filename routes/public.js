@@ -3,6 +3,7 @@ const createUploadMiddleware = require("../middlewares/fileUploader.middleware")
 const constants = require("../config/constants");
 const contactController = require("../controllers/public/contact.controller");
 const jobApplicationController = require("../controllers/public/jobApplication.controller");
+const hireDeveloperController = require("../controllers/public/hireDeveloper.controller");
 
 const router = Router();
 
@@ -13,5 +14,8 @@ router.post('/contact', contactController.createContact);
 
 // Public job application submission
 router.post('/job-application', resumeUpload, jobApplicationController.createJobApplication);
+
+// Public hire developer request submission
+router.post('/hire-developer', hireDeveloperController.createHireDeveloperRequest);
 
 module.exports = router;

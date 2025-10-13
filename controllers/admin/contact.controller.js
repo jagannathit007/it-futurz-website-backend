@@ -21,7 +21,16 @@ const createContact = asyncHandler(async (req, res) => {
 
 // Get all contacts (admin)
 const getContacts = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, status, search } = req.body;
+  const { 
+    page = 1, 
+    limit = 10, 
+    status, 
+    search,
+    startDate,
+    endDate,
+    sortBy = 'createdAt',
+    sortOrder = 'desc'
+  } = req.body;
 
   let query = {};
 
@@ -38,9 +47,24 @@ const getContacts = asyncHandler(async (req, res) => {
     ];
   }
 
+  // Date range filter
+  if (startDate || endDate) {
+    query.createdAt = {};
+    if (startDate) {
+      query.createdAt.$gte = new Date(startDate);
+    }
+    if (endDate) {
+      query.createdAt.$lte = new Date(endDate);
+    }
+  }
+
+  // Sort options
+  const sortOptions = {};
+  sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
   const contacts = await Contact.find(query)
     .populate("respondedBy", "name email")
-    .sort({ createdAt: -1 })
+    .sort(sortOptions)
     .limit(limit * 1)
     .skip((page - 1) * limit);
 
@@ -50,9 +74,10 @@ const getContacts = asyncHandler(async (req, res) => {
     new ApiResponse(200, "Contacts retrieved successfully", {
       contacts,
       pagination: {
-        currentPage: page,
+        currentPage: parseInt(page),
         totalPages: Math.ceil(total / limit),
         totalContacts: total,
+        limit: parseInt(limit),
         hasNext: page < Math.ceil(total / limit),
         hasPrev: page > 1,
       },

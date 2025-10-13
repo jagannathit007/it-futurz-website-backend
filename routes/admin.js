@@ -5,6 +5,8 @@ const { adminAuthMiddleware } = require("../middlewares/admin.middleware");
 const authController = require("../controllers/admin/authentication.controller");
 const contactController = require("../controllers/admin/contact.controller");
 const jobApplicationController = require("../controllers/admin/jobApplication.controller");
+const hireDeveloperController = require("../controllers/admin/hireDeveloper.controller");
+const dashboardController = require("../controllers/admin/dashboard.controller");
 
 const router = Router();
 
@@ -33,5 +35,15 @@ router.post('/job-applications/update/:id', adminAuthMiddleware, jobApplicationC
 router.post('/job-applications/delete/:id', adminAuthMiddleware, jobApplicationController.deleteJobApplication);
 router.post('/job-applications/download-resume/:id', adminAuthMiddleware, jobApplicationController.downloadResume);
 router.post('/job-applications/stats', adminAuthMiddleware, jobApplicationController.getJobApplicationStats);
+
+// Hire Developer Management
+router.post('/hire-developers/get', adminAuthMiddleware, hireDeveloperController.getHireDeveloperRequests);
+router.post('/hire-developers/get/:id', adminAuthMiddleware, hireDeveloperController.getHireDeveloperRequest);
+router.post('/hire-developers/update/:id', adminAuthMiddleware, hireDeveloperController.updateHireDeveloperRequest);
+router.post('/hire-developers/delete/:id', adminAuthMiddleware, hireDeveloperController.deleteHireDeveloperRequest);
+router.post('/hire-developers/stats', adminAuthMiddleware, hireDeveloperController.getHireDeveloperStats);
+
+// Dashboard Statistics (Combined)
+router.post('/dashboard/stats', adminAuthMiddleware, dashboardController.getDashboardStats);
 
 module.exports = router;
