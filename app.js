@@ -13,7 +13,12 @@ const cors = require("cors");
 const app = express();
 
 //Setting up CORS
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:4200', 'http://127.0.0.1:4200'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
 app.use(logger("dev"));
 app.use(express.json());

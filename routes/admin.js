@@ -13,6 +13,8 @@ const profileUpload = createUploadMiddleware(constants.UPLOADS.PROFILES).single(
 // Authentication (POST methods)
 router.post('/register', profileUpload, authController.register);
 router.post('/login', authController.login);
+router.post('/logout', adminAuthMiddleware, authController.logout);
+router.post('/refresh-token', authController.refreshAccessToken);
 router.post('/change-password', adminAuthMiddleware, authController.changePassword);
 router.post('/update-profile', adminAuthMiddleware, profileUpload, authController.updateProfile);
 router.post('/get-user', adminAuthMiddleware, authController.getUser);

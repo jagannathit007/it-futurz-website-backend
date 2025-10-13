@@ -23,16 +23,16 @@ adminSchema.methods.isPasswordCorrect = async function (password) {
 adminSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     { _id: this._id, type: 'Admin' },
-    process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    process.env.ACCESS_TOKEN_SECRET || 'fallback_access_secret_key',
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY || '15m' }
   );
 };
 
 adminSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     { _id: this._id },
-    process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    process.env.REFRESH_TOKEN_SECRET || 'fallback_refresh_secret_key',
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY || '7d' }
   );
 };
 

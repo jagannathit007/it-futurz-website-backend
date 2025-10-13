@@ -10,7 +10,7 @@ const adminAuthMiddleware = asyncHandler(async (req, res, next) => {
     if (!token) {
       return response.unauthorized("unauthorized access", res);
     }
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || 'fallback_access_secret_key');
     const user = await Admin.findById(decodedToken._id).select("-password -refreshToken").lean();
  
     if (!user) {
