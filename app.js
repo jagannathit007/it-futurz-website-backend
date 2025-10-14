@@ -1,6 +1,4 @@
 const path = require("path");
-
-//Setting up environment and database 
 const dotenv = require("dotenv");
 dotenv.config({path: './.env'});
 require("./config/database");
@@ -12,42 +10,72 @@ const cors = require("cors");
 
 const app = express();
 
-//Setting up CORS
+// Permissive CORS configuration (allows all origins)
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://127.0.0.1:4200', 'http://localhost:3000'],
+  origin: true, // Allows all origins
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'X-Access-Token'
+  ],
+  optionsSuccessStatus: 200
 }));
 
+// Handle all preflight requests
+app.options('*', cors());
+
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));  
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));  
 app.use(cookieParser()); 
 
-//Allow public users to access the uploads folder publically.
+// Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Test route
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    message: 'CORS is working!', 
+    timestamp: new Date(),
+    origin: req.headers.origin,
+    method: req.method
+  });
+});
 
 //Register API Routes
 require("./routes/zindex").forEach((e) => app.use(e.path, e.file));
 
 //Error handler for APIs
 app.use((err, req, res, next) => {
-  const statusCode =
-    res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
-
+  console.error('Error:', err); 
+  
+  const statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
+  
   let result = {
     message: err.message || "Internal Server Error",
     status: statusCode,
     data: null,
   };
 
-  //Add Stacktrace in development mode only
-  if (process.env.NODE_ENV == "dev") {
+  if (process.env.NODE_ENV === "dev") {
     result.stack = err.stack;
   }
 
   res.status(statusCode).json(result);
+});
+
+// 404 handler - PLACE THIS AFTER ALL ROUTES
+app.use('*', (req, res) => {
+  res.status(404).json({
+    message: 'Route not found',
+    status: 404,
+    data: null
+  });
 });
 
 var debug = require("debug")("node-boilerplate:server");
@@ -64,26 +92,14 @@ server.on("listening", onListening);
 
 function normalizePort(val) {
   var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    return val;
-  }
-
-  if (port >= 0) {
-    return port;
-  }
-
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
   return false;
 }
 
-
 function onError(error) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
-
+  if (error.syscall !== "listen") throw error;
   var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
-
   switch (error.code) {
     case "EACCES":
       console.error(bind + " requires elevated privileges");
@@ -101,12 +117,13 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  let mode = process.env.NODE_ENV == "dev" ? "Developement Mode" : "Production Mode";
+  let mode = process.env.NODE_ENV === "dev" ? "Development Mode" : "Production Mode";
   console.log("-------------------");
   console.log(mode);
   console.log("-------------------");
-  console.log(`🚀🚀 App is listening on :: ${bind}`);
+  console.log(`🚀 App is listening on :: ${bind}`);
+  console.log(`📡 Test CORS at: http://localhost:${port}/api/test`);
+  console.log("✅ CORS configured to allow all origins");
 }
-
 
 module.exports = app;

@@ -5,6 +5,8 @@ const contactController = require("../controllers/public/contact.controller");
 const jobApplicationController = require("../controllers/public/jobApplication.controller");
 const hireDeveloperController = require("../controllers/public/hireDeveloper.controller");
 const openPositionPublicController = require("../controllers/public/openPosition.controller");
+const productPublicController = require("../controllers/public/product.controller");
+const servicePublicController = require("../controllers/public/service.controller");
 
 const router = Router();
 
@@ -21,5 +23,11 @@ router.post('/job-application', resumeUpload, jobApplicationController.createJob
 
 // Public hire developer request submission
 router.post('/hire-developer', hireDeveloperController.createHireDeveloperRequest);
+
+// Public products
+router.get('/products', productPublicController.getPublicProducts);
+
+// Public services
+router.get('/services', servicePublicController.getPublicServices);
 
 module.exports = router;
