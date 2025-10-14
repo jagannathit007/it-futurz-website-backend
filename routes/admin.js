@@ -7,6 +7,7 @@ const contactController = require("../controllers/admin/contact.controller");
 const jobApplicationController = require("../controllers/admin/jobApplication.controller");
 const hireDeveloperController = require("../controllers/admin/hireDeveloper.controller");
 const dashboardController = require("../controllers/admin/dashboard.controller");
+const openPositionController = require("../controllers/admin/openPosition.controller");
 
 const router = Router();
 
@@ -42,6 +43,15 @@ router.post('/hire-developers/get/:id', adminAuthMiddleware, hireDeveloperContro
 router.post('/hire-developers/update/:id', adminAuthMiddleware, hireDeveloperController.updateHireDeveloperRequest);
 router.post('/hire-developers/delete/:id', adminAuthMiddleware, hireDeveloperController.deleteHireDeveloperRequest);
 router.post('/hire-developers/stats', adminAuthMiddleware, hireDeveloperController.getHireDeveloperStats);
+
+// Open Position Management
+router.post('/open-positions/create', adminAuthMiddleware, openPositionController.createOpenPosition);
+router.post('/open-positions/get', adminAuthMiddleware, openPositionController.getAllOpenPositions);
+router.post('/open-positions/get/:id', adminAuthMiddleware, openPositionController.getOpenPositionById);
+router.post('/open-positions/update/:id', adminAuthMiddleware, openPositionController.updateOpenPosition);
+router.post('/open-positions/delete/:id', adminAuthMiddleware, openPositionController.deleteOpenPosition);
+router.post('/open-positions/toggle-status/:id', adminAuthMiddleware, openPositionController.togglePositionStatus);
+router.post('/open-positions/stats', adminAuthMiddleware, openPositionController.getPositionStats);
 
 // Dashboard Statistics (Combined)
 router.post('/dashboard/stats', adminAuthMiddleware, dashboardController.getDashboardStats);

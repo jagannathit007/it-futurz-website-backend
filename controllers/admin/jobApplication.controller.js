@@ -53,6 +53,7 @@ const getJobApplications = asyncHandler(async (req, res) => {
       { name: { $regex: search, $options: "i" } },
       { email: { $regex: search, $options: "i" } },
       { phone: { $regex: search, $options: "i" } },
+      { jobTitle: { $regex: search, $options: "i" } },
       { experience: { $regex: search, $options: "i" } },
       { coverLetter: { $regex: search, $options: "i" } },
     ];
