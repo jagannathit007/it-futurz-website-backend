@@ -104,7 +104,8 @@ exports.register = asyncHandler(async (req, res) => {
 
   exports.changePassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body;
-    const user = await Admin.findById(req.admin._id);
+    // Need password field to verify current password
+    const user = await Admin.findById(req.admin._id).select('+password');
     
     if(!user){
       return response.notFound("user not found", res);
