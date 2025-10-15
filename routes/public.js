@@ -7,6 +7,7 @@ const hireDeveloperController = require("../controllers/public/hireDeveloper.con
 const openPositionPublicController = require("../controllers/public/openPosition.controller");
 const productPublicController = require("../controllers/public/product.controller");
 const servicePublicController = require("../controllers/public/service.controller");
+const testimonialPublicController = require("../controllers/public/testimonial.controller");
 
 const router = Router();
 
@@ -29,5 +30,8 @@ router.get('/products', productPublicController.getPublicProducts);
 
 // Public services
 router.get('/services', servicePublicController.getPublicServices);
+
+// Public testimonials
+router.get('/testimonials', testimonialPublicController.getPublicTestimonials);
 
 module.exports = router;

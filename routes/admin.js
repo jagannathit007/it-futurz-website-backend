@@ -10,6 +10,7 @@ const dashboardController = require("../controllers/admin/dashboard.controller")
 const openPositionController = require("../controllers/admin/openPosition.controller");
 const productController = require("../controllers/admin/product.controller");
 const serviceController = require("../controllers/admin/service.controller");
+const testimonialController = require("../controllers/admin/testimonial.controller");
 
 const router = Router();
 
@@ -72,6 +73,14 @@ router.post('/services/get/:id', adminAuthMiddleware, serviceController.getServi
 router.post('/services/update/:id', adminAuthMiddleware, serviceImageUpload, serviceController.updateService);
 router.post('/services/delete/:id', adminAuthMiddleware, serviceController.deleteService);
 router.post('/services/toggle-status/:id', adminAuthMiddleware, serviceController.toggleServiceStatus);
+
+// Testimonials Management
+router.post('/testimonials/create', adminAuthMiddleware, testimonialController.createTestimonial);
+router.post('/testimonials/get', adminAuthMiddleware, testimonialController.getTestimonials);
+router.post('/testimonials/get/:id', adminAuthMiddleware, testimonialController.getTestimonialById);
+router.post('/testimonials/update/:id', adminAuthMiddleware, testimonialController.updateTestimonial);
+router.post('/testimonials/delete/:id', adminAuthMiddleware, testimonialController.deleteTestimonial);
+router.post('/testimonials/toggle-status/:id', adminAuthMiddleware, testimonialController.toggleTestimonialStatus);
 
 // Dashboard Statistics (Combined)
 router.post('/dashboard/stats', adminAuthMiddleware, dashboardController.getDashboardStats);
