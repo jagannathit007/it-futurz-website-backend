@@ -33,14 +33,12 @@ if (process.env.NODE_ENV === "dev") {
 
 // Body parsing
 app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: false, limit: '50mb' }));  
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 app.use(cookieParser());
 
 // Static files
-const staticOptions = {
-  maxAge: process.env.NODE_ENV === "dev" ? 0 : '1d'
-};
-app.use("/uploads", express.static(path.join(__dirname, "uploads"), staticOptions));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/files", express.static(path.join(__dirname, "public/files")));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Health check
@@ -62,9 +60,9 @@ app.use('*', (req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
-  
+
   const statusCode = err.statusCode || 500;
-  
+
   res.status(statusCode).json({
     message: err.message || "Internal Server Error",
     status: statusCode
