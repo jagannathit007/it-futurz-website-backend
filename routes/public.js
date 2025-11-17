@@ -8,10 +8,13 @@ const openPositionPublicController = require("../controllers/public/openPosition
 const productPublicController = require("../controllers/public/product.controller");
 const servicePublicController = require("../controllers/public/service.controller");
 const testimonialPublicController = require("../controllers/public/testimonial.controller");
+const resellerPublicController = require("../controllers/public/reseller.controller");
 
 const router = Router();
 
 const resumeUpload = createUploadMiddleware(constants.UPLOADS.RESUMES).single('resume');
+
+router.post('/save-reseller', resellerPublicController.saveReseller);
 
 // Public contact form submission
 router.post('/contact', contactController.createContact);
